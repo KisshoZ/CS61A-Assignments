@@ -1,3 +1,19 @@
-# Ignore macOS system files used to store folder metadata
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+
+# CS61A autograder cache
+.ok_history/
+.ok_storage/
+.ok_disabled
+
+# VS Code personal settings
+.vscode/
+
+# OS
 .DS_Store
 
