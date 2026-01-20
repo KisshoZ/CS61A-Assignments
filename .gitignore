@@ -6,10 +6,10 @@ __pycache__/
 .venv/
 venv/
 
-# CS61A autograder cache
-.ok_history/
-.ok_storage/
-.ok_disabled
+# CS61A autograder (any level)
+**/.ok_history
+**/.ok_storage
+**/.ok_disabled
 
 # VS Code personal settings
 .vscode/
