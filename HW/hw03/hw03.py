@@ -25,7 +25,16 @@ def num_eights(n):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    if n < 10:
+        if n == 8:
+            return 1
+        else:
+            return 0
+    else:
+        if n % 10 == 8:
+            return num_eights(n // 10) + 1
+        else:
+            return num_eights(n // 10)
 
 def digit_distance(n):
     """Determines the digit distance of n.
@@ -47,7 +56,12 @@ def digit_distance(n):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    if n < 10:
+        return 0
+    elif n < 100:
+        return abs(n // 10 - n % 10)                    
+    else:
+        return abs(((n // 10) % 10) - n % 10) + digit_distance(n // 10)
 
 def interleaved_sum(n, odd_func, even_func):
     """Compute the sum odd_func(1) + even_func(2) + odd_func(3) + ..., up
@@ -71,7 +85,17 @@ def interleaved_sum(n, odd_func, even_func):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    def sum_odd(i):
+        if i > n:
+            return 0
+        else:
+            return odd_func(i) + sum_odd(i+2)
+    def sum_even(i):
+        if i > n:
+            return 0
+        else:
+            return even_func(i) + sum_even(i+2)
+    return sum_odd(1) + sum_even(2)
 
 def next_smaller_dollar(bill):
     """Returns the next smaller bill in order."""
@@ -107,7 +131,15 @@ def count_dollars(total):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    def count_partition(total, bill):
+        if total == 0:
+            return 1
+        if bill is None:
+            return 0
+        if total < 0:
+            return 0
+        return count_partition(total - bill, bill) + count_partition(total, next_smaller_dollar(bill))
+    return count_partition(total, 100)
 
 def next_larger_dollar(bill):
     """Returns the next larger bill in order."""
@@ -143,7 +175,15 @@ def count_dollars_upward(total):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    def count_partition(total, bill):
+        if total == 0:
+            return 1
+        if bill is None:
+            return 0
+        if total < 0:
+            return 0
+        return count_partition(total - bill, bill) + count_partition(total, next_larger_dollar(bill))
+    return count_partition(total, 1)
 
 def print_move(origin, destination):
     """Print instructions to move a disk."""
@@ -178,7 +218,13 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
-
+    if n == 1:
+        print_move(start, end)
+    else:
+        other = 6 - start - end
+        move_stack(n - 1, start, other)
+        print_move(start, end)
+        move_stack(n - 1, other, end)
 
 from operator import sub, mul
 
@@ -193,5 +239,9 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return (
+        lambda f: (lambda n: f(f, n))
+    )(
+        lambda f, n: 1 if n == 0 else mul(n, f(f, sub(n, 1)))
+    )
 

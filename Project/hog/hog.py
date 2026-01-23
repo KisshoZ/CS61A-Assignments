@@ -345,15 +345,42 @@ def sus_strategy(score, opponent_score, threshold=11, num_rolls=6):
 
 
 def final_strategy(score, opponent_score):
-    """Write a brief description of your final strategy.
-
-    *** YOUR DESCRIPTION HERE ***
+    """Final strategy:
+    - Prefer rolling 0 when Boar Brawl (+ Sus Fuss) gives a large increase or can win immediately.
+    - In the endgame, roll fewer dice to reduce the risk of rolling a 1.
+    - Otherwise, roll a bit more when behind and a bit less when ahead.
     """
-    # BEGIN PROBLEM 12
-    if score + boar_brawl(score, opponent_score) >= 100:
-        return 0  
-    return 6  # Remove this line once implemented.
-    # END PROBLEM 12
+    goal = GOAL
+
+    # Effective gain if rolling 0 this turn (include Sus Fuss)
+    gain0 = sus_points(score + boar_brawl(score, opponent_score)) - score
+
+    # 1) Win immediately by rolling 0
+    if score + gain0 >= goal:
+        return 0
+
+    # 2) If rolling 0 gives a big effective gain, take it
+    # (Boar Brawl can be large; Sus Fuss can also bump you upward)
+    if gain0 >= 9:
+        return 0
+
+    # 3) Endgame: reduce variance (avoid pig out risk)
+    remaining = goal - score
+    if remaining <= 8:
+        return 1
+    if remaining <= 15:
+        return 2
+    if remaining <= 25:
+        return 3
+
+    # 4) Midgame: adjust aggression based on lead/deficit
+    diff = score - opponent_score
+    if diff <= -15:
+        return 7
+    if diff >= 15:
+        return 5
+    return 6
+
 
 
 ##########################
