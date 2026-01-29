@@ -13,7 +13,12 @@ def shuffle(s):
     """
     assert len(s) % 2 == 0, 'len(seq) must be even'
     "*** YOUR CODE HERE ***"
-
+    k = len(s)//2
+    result = []
+    for i in range(k):
+        result.append(s[i])
+        result.append(s[i+k])
+    return result
 
 def deep_map(f, s):
     """Replace all non-list elements x with f(x) in the nested list s.
@@ -38,7 +43,11 @@ def deep_map(f, s):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    for i in range(len(s)):
+        if type(s[i]) == list:
+            deep_map(f, s[i])
+        else:
+            s[i] = f(s[i])
 
 HW_SOURCE_FILE=__file__
 
@@ -47,11 +56,14 @@ def planet(mass):
     """Construct a planet of some mass."""
     assert mass > 0
     "*** YOUR CODE HERE ***"
+    p = ['planet', mass]
+    return p
 
 def mass(p):
     """Select the mass of a planet."""
     assert is_planet(p), 'must call mass on a planet'
     "*** YOUR CODE HERE ***"
+    return p[1]
 
 def is_planet(p):
     """Whether p is a planet."""
@@ -104,7 +116,21 @@ def balanced(m):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    if is_planet(m):
+            return True
+    
+    # 1. 获取左右臂及其末端结构
+    l_arm, r_arm = left(m), right(m)
+    l_end, r_end = end(l_arm), end(r_arm)
+    
+    # 2. 计算当前层的力矩
+    # 力矩 = 臂长 * 末端总重量
+    l_torque = length(l_arm) * total_mass(l_end)
+    r_torque = length(r_arm) * total_mass(r_end)
+    
+    # 3. 递归检查
+    # 条件：当前层力矩相等 AND 左边平衡 AND 右边平衡
+    return l_torque == r_torque and balanced(l_end) and balanced(r_end)
 
 def berry_finder(t):
     """Returns True if t contains a node with the value 'berry' and 
